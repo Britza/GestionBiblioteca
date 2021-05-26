@@ -5,6 +5,11 @@
  */
 package gestionbiblioteca;
 
+import javax.swing.*;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author britz
@@ -14,8 +19,15 @@ public class ConsultarUsuario extends javax.swing.JInternalFrame {
     /**
      * Creates new form BuscarClientes
      */
+    Connection con;
     public ConsultarUsuario() {
         initComponents();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InsertarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -198,23 +210,91 @@ public class ConsultarUsuario extends javax.swing.JInternalFrame {
 
     private void bModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bModificarActionPerformed
 
+        String dni=jDni.getText().trim();
+        try {
+
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            String sql = "UPDATE usuarios SET Nombre=?,Apellidos=?, Email=?,Direccion=?,Telefono=? WHERE DNI='"+dni+"'";
+            PreparedStatement ps =con.prepareStatement(sql);
+            ps.setString(1,jNombre.getText().trim());
+            ps.setString(2,jApellido.getText().trim());
+            ps.setString(3,jEmail.getText().trim());
+            ps.setString(4,jDireccion.getText().trim());
+            ps.setString(5,jTelefono.getText().trim());
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "El usuario ha sido modificado con exito");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "El usuario no se ha podido modificar");
+        }
        
     }//GEN-LAST:event_bModificarActionPerformed
 
     private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
 
-        
+        try {
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM usuarios WHERE DNI='"+jDocumento.getText()+"'");
+
+
+
+            do{
+                if(rs.next()){
+
+
+                    jNombre.setText(rs.getString(1));
+                    jApellido.setText(rs.getString(2));
+                    jDni.setText(rs.getString(3));
+                    jEmail.setText(rs.getString(4));
+                    jDireccion.setText(rs.getString(5));
+                    jTelefono.setText(rs.getString(6));
+
+
+                } else
+                    JOptionPane.showMessageDialog(null,"El usuario no está registrado");
+                jDocumento.setText("");
+
+            }while(rs.next());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bBuscarActionPerformed
 
     private void bLimpiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLimpiaActionPerformed
         // TODO add your handling code here:
 
-      
+        jNombre.setText("");
+        jApellido.setText("");
+        jDni.setText("");
+        jEmail.setText("");
+        jDireccion.setText("");
+        jTelefono.setText("");
 
     }//GEN-LAST:event_bLimpiaActionPerformed
 
     private void bEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarActionPerformed
-      
+
+        try {
+
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            String query = "DELETE FROM usuarios WHERE DNI='"+jDni.getText()+"'";
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(null, "El usuario fue eliminado con exito");
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ConsultarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"El usuario no se ha podido eliminar");
+        }
     }//GEN-LAST:event_bEliminarActionPerformed
 
 

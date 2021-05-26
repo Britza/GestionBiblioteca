@@ -205,7 +205,13 @@ public class InsertarLibros extends javax.swing.JInternalFrame {
 
     private void bLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bLimpiarActionPerformed
         // TODO add your handling code here:
-       
+
+        jAutor.setText("");
+        jTitulo.setText("");
+        jISBN.setText("");
+        jGenero.setText("");
+        jIdioma.setText("");
+        jPrestamo.setDate(null);
     }//GEN-LAST:event_bLimpiarActionPerformed
 
     private void jIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jIdiomaActionPerformed

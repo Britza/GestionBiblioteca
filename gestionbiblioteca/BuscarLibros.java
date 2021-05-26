@@ -5,6 +5,12 @@
  */
 package gestionbiblioteca;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author britz
@@ -14,8 +20,15 @@ public class BuscarLibros extends javax.swing.JInternalFrame {
     /**
      * Creates new form BuscarLibros
      */
+    Connection con;
     public BuscarLibros() {
+
         initComponents();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InsertarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -118,11 +131,59 @@ public class BuscarLibros extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarActionPerformed
-        
+
+        try {
+
+            DefaultTableModel modelo = (DefaultTableModel)jTabla.getModel();
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM libros WHERE ISBN='"+jIsbn.getText()+"'");
+
+            modelo.setRowCount(0);
+            do{
+
+                if(rs.next()){
+
+
+                    String[] fila= {rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)};
+                    modelo.addRow(fila);
+
+                } else
+                    JOptionPane.showMessageDialog(null,"El libro no se ha encontrado");
+                jIsbn.setText("");
+
+            }while(rs.next());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ListaUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bBuscarActionPerformed
 
     private void bMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMostrarActionPerformed
-       
+
+        try {
+
+            DefaultTableModel modelo = (DefaultTableModel)jTabla.getModel();
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM libros");
+            modelo.setRowCount(0);
+
+
+
+            if(rs.next()){
+
+                do{
+                    String[] fila= {rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6)};
+                    modelo.addRow(fila);
+
+
+                }while(rs.next());
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ListaUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_bMostrarActionPerformed
 
 
