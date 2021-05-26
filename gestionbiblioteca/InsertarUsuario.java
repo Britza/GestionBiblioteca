@@ -223,7 +223,7 @@ public class InsertarUsuario extends javax.swing.JInternalFrame {
     private void bInsertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bInsertaActionPerformed
        
          try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost/administraciondehotel","root","");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
             Statement stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO usuarios VALUES('"+jNombre.getText()+"','"+jApellidos.getText()+"','"+jDni.getText()+"','"+jDireccion.getText()+"','"+jEmail.getText()+"','"+jTelefono.getText()+"')");
         } catch (SQLException ex) {

@@ -5,6 +5,15 @@
  */
 package gestionbiblioteca;
 
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author britz
@@ -14,8 +23,14 @@ public class InsertarLibros extends javax.swing.JInternalFrame {
     /**
      * Creates new form InsertarLibros
      */
+    Connection con;
     public InsertarLibros() {
         initComponents();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InsertarUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -169,7 +184,22 @@ public class InsertarLibros extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRegistrarseActionPerformed
-        // TODO add your handling code here:
+
+        int year = jPrestamo.getCalendar().get(Calendar.YEAR);
+        int mes = jPrestamo.getCalendar().get(Calendar.MONTH);
+        int dia = jPrestamo.getCalendar().get(Calendar.DAY_OF_MONTH);
+
+        String fechaPrestamo = ""+year+"-"+mes+"-"+dia;
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/gestiondebiblioteca","root","");
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO libros VALUES('"+jAutor.getText()+"','"+jTitulo.getText()+"','"+jISBN.getText()+"','"+jGenero.getText()+"','"+jIdioma.getText()+"','"+fechaPrestamo+"')");
+        } catch (SQLException ex) {
+            Logger.getLogger(InsertarLibros.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "No se puede conectar a la base de datos");
+        }
+        JOptionPane.showMessageDialog(null,"Se ha completado el registro del libro");
        
     }//GEN-LAST:event_bRegistrarseActionPerformed
 
